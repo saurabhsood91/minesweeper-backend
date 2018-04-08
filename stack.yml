@@ -1,0 +1,32 @@
+version: '2.0'
+
+volumes:
+  postgres_backup_local: {}
+  postgres_data_local: {}
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: compose/postgres/Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_local:/var/lib/postgresql/data
+      - postgres_backup_local:/backups
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+  web:
+    build:
+      context: .
+      dockerfile: compose/web/Dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=example
+    ports:
+      - "4567:4567"
