@@ -3,10 +3,11 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS "scores" (
   "id" serial constraint "pk_scores" PRIMARY KEY,
   "name" VARCHAR(50) NOT NULL,
-  "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL,
+  "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+  "seconds" INTEGER NOT NULL,
   "rows" INTEGER NOT NULL,
   "cols" INTEGER NOT NULL,
-  "no_of_mines" INTEGER NOT NULL
+  "mines" INTEGER NOT NULL
 );
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
