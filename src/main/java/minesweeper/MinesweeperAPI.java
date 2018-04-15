@@ -30,10 +30,19 @@ class JsonTransformer implements ResponseTransformer {
 public class MinesweeperAPI {
 
     public static Connection connect() throws SQLException {
-        String url = "jdbc:postgresql://db:5432/minesweeper";
-        String user = "postgres";
-        String password = "example";
-        return DriverManager.getConnection(url, user, password);
+//        String url = "jdbc:postgresql://db:5432/minesweeper";
+//        String user = "postgres";
+//        String password = "example";
+        String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        return DriverManager.getConnection(dbUrl);
+    }
+
+    static int getHerokuAssignedPort() {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (processBuilder.environment().get("PORT") != null) {
+            return Integer.parseInt(processBuilder.environment().get("PORT"));
+        }
+        return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
     }
 
     private static void enableCORS(final String origin, final String methods, final String headers) {
@@ -61,7 +70,7 @@ public class MinesweeperAPI {
     }
 
     public static void main(String args[]) {
-        Spark.port(4567);
+        Spark.port(getHerokuAssignedPort());
         enableCORS("*", "*", "*");
 
         path("/api", () -> {
