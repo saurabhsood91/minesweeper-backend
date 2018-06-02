@@ -12,6 +12,8 @@ import spark.Spark;
 
 import static spark.Spark.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.*;
 
 import minesweeper.models.Score;
@@ -29,12 +31,21 @@ class JsonTransformer implements ResponseTransformer {
 
 public class MinesweeperAPI {
 
-    public static Connection connect() throws SQLException {
-//        String url = "jdbc:postgresql://db:5432/minesweeper";
-//        String user = "postgres";
-//        String password = "example";
-        String dbUrl = System.getenv("JDBC_DATABASE_URL");
-        return DriverManager.getConnection(dbUrl);
+    public static Connection connect() throws SQLException, URISyntaxException {
+        if(System.getenv("DATABASE_URL") == null) {
+            String url = "jdbc:postgresql://localhost:5432/minesweeper";
+            String user = "postgres";
+            String password = "example";
+            return DriverManager.getConnection(url, user, password);
+        }
+
+        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+        return DriverManager.getConnection(dbUrl, username, password);
     }
 
     static int getHerokuAssignedPort() {
@@ -166,6 +177,8 @@ public class MinesweeperAPI {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return -1;
