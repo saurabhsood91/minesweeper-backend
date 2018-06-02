@@ -50,7 +50,7 @@
                     <appName>minesweeper-backend-spark</appName>
                     <processTypes>
                         <!-- Tell Heroku how to launch your application -->
-                        <web>minesweeper-1.0-SNAPSHOT-jar-with-dependencies.jar</web>
+                        <web>java $JAVA_OPTS -cp target/classes:target/dependency/* MinesweeperAPI</web>
                     </processTypes>
                 </configuration>
             </plugin>
