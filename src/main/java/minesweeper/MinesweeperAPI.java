@@ -131,12 +131,13 @@ public class MinesweeperAPI {
                     int noOfMines = score.getMines();
                     int seconds = score.getSeconds();
                     String name = score.getName();
-                    
-                    id = addScore(name, rows, cols, seconds, noOfMines);
 
                     if(!Utils.validateName(name)) {
                         response.status(400);
                     }
+
+                    id = addScore(name, rows, cols, seconds, noOfMines);
+
                 } catch(NumberFormatException e) {
                     e.printStackTrace();
                     response.status(400);

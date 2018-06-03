@@ -5,9 +5,9 @@ package minesweeper.utils;
  */
 public class Utils {
     public static boolean validateName(String name) {
-        if(name.isEmpty() || !name.matches("[a-zA-Z\\ ]")) {
-            return false;
+        if(name.chars().allMatch(Character::isLetter)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }
